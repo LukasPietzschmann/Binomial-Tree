@@ -138,7 +138,7 @@ class BinHeap <P extends Comparable<? super P>, D> {
   public int size(){
     Node next = this.head.sibling;
     int degree;
-    if(head != null) {
+    if(this.head != null) {
       degree = head.degree;
       while (this.head != next) {
         degree += next.degree;
@@ -154,5 +154,21 @@ class BinHeap <P extends Comparable<? super P>, D> {
       return true;
     }
     return false;
+  }
+
+  public Entry<P, D> minimum(){
+    Entry next = this.head.sibling.entry;
+    Entry temp = null;
+    P minprio = this.head.entry.prio();
+    if(this.head != null){
+      while(this.head.entry != next) {
+        if(minprio.compareTo((P)next.prio()) <=0){
+          minprio = (P)next.prio();
+          temp = next;
+        }
+      }
+      return temp;
+    }
+    return null;
   }
 }
