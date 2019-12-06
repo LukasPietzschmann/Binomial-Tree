@@ -184,8 +184,17 @@ class BinHeap <P extends Comparable<? super P>, D> {
   }
 
   public boolean contains(Entry<P, D> e){
-    //TODO
-    return  false;
+    if(e == null || e.node == null) return  false;
+
+    Node temp = e.node;
+    while(temp.parent != null) temp = temp.parent;
+
+    Node current = temp;
+    while(this.head != temp){
+      if(temp == current) return false;
+      temp = temp.sibling;
+    }
+    return true;
   }
 
   public Entry<P, D> insert(P p, D d){
