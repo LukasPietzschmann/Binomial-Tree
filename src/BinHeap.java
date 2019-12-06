@@ -104,10 +104,10 @@ class BinHeap <P extends Comparable<? super P>, D> {
         BinHeap b = buffer.get(0);
         buffer.remove(b);
         
-        Node n = this.head;
-        while (n.sibling != this.head) n = n.sibling;
+        Node n = h.head;
+        while (n.sibling != h.head) n = n.sibling;
         n.sibling = b.head;
-        n.sibling.sibling = this.head;
+        n.sibling.sibling = h.head;
       }
       if (buffer.size() == 2) {
         BinHeap b1 = buffer.get(0);
@@ -122,18 +122,23 @@ class BinHeap <P extends Comparable<? super P>, D> {
         b2.head.sibling = null;
         b2.head.degree += 1;
         b1.head.parent = b2.head;
-  
+        
         if (b2.head.child == null) b2.head.child = b1.head.sibling = b1.head;
         else b1.head.sibling = b2.head.child.sibling;
         b2.head.child = b2.head.child.sibling = b1.head;
+        
+        buffer.remove(b1);
+        buffer.remove(b2);
+        
+        buffer.add(b2);
       }
       
       k++;
     }
     
-    
-    return null;
+    return h;
   }
+  
   //liefert die Größe der Halde, die Anzahl momentan gespeicherten Elemeneten
   public int size(){
     Node next = this.head.sibling;
