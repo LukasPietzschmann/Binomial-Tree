@@ -23,7 +23,7 @@ class BinHeap <P extends Comparable<? super P>, D> {
   // Wenn der Eintrag momentan tatsächlich zu einer Halde gehört,
   // verweist node auf den zugehörigen Knoten eines Binomialbaums
   // dieser Halde.
-  public static class Entry<P extends Comparable<? super P>, D> {
+  public static class Entry<P, D> {
     // Priorität, zusätzliche Daten und zugehöriger Knoten.
     private P prio;
     private D data;
@@ -113,7 +113,7 @@ class BinHeap <P extends Comparable<? super P>, D> {
         BinHeap b1 = buffer.get(0);
         BinHeap b2 = buffer.get(1);
         
-        if (b1.head.entry.prio.compareTo(b2.head.entry.prio) <= 0) {
+        if (((P)b1.head.entry.prio).compareTo((P)b2.head.entry.prio()) <= 0) {
           BinHeap temp = b1;
           b1 = b2;
           b2 = temp;
