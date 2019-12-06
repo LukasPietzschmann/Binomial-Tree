@@ -84,6 +84,8 @@ class BinHeap <P extends Comparable<? super P>, D> {
   }
   
   private BinHeap mergeBinHeap(BinHeap h1, BinHeap h2) {
+    if(h1 == null || h2 == null) return null;
+
     BinHeap h = new BinHeap();
     ArrayList<BinHeap> buffer = new ArrayList<>();
     buffer.ensureCapacity(3);
@@ -141,10 +143,9 @@ class BinHeap <P extends Comparable<? super P>, D> {
   
   //liefert die Größe der Halde, die Anzahl momentan gespeicherten Elemeneten
   public int size(){
-    Node next = this.head.sibling;
-    int degree;
     if(this.head != null) {
-      degree = head.degree;
+      Node next = this.head.sibling;
+      int degree = head.degree;
       while (this.head != next) {
         degree += next.degree;
         next = next.sibling;
@@ -175,5 +176,34 @@ class BinHeap <P extends Comparable<? super P>, D> {
       return temp;
     }
     return null;
+  }
+
+  public boolean remove(Entry<P, D> e){
+    //TODO
+    return false;
+  }
+
+  public boolean contains(Entry<P, D> e){
+    //TODO
+    return  false;
+  }
+
+  public Entry<P, D> insert(P p, D d){
+    if(p == null) return null;
+
+    Entry e = new Entry(p, d);
+    BinHeap tempheap = new BinHeap(new Node(e));
+    this.head = mergeBinHeap(this, tempheap).head;
+
+    return e;
+  }
+
+  public Entry<P, D> extractMin(){
+    //TODO
+    return null;
+  }
+
+  public void dump(){
+    //TODO
   }
 }
