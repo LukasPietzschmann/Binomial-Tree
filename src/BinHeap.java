@@ -3,6 +3,13 @@
 // Comparable<P> oder Comparable<P'> für einen Obertyp P' von P
 // implementieren muss) und zusätzlichen Daten eines beliebigen Typs D.
 class BinHeap <P extends Comparable<? super P>, D> {
+  private Node<P, D> head; // Refrenz auf erstes Element der Halde
+
+  //Konstruktor BinHeap
+  public  BinHeap(){
+    head = null;
+  }
+
   // Eintrag einer solchen Warteschlange bzw. Halde, bestehend aus
   // einer Priorität prio mit Typ P und zusätzlichen Daten data mit
   // Typ D.
@@ -59,5 +66,26 @@ class BinHeap <P extends Comparable<? super P>, D> {
     // Priorität des Knotens, d. h. des zugehörigen Eintrags
     // liefern.
     private P prio () { return entry.prio; }
+  }
+  //liefert die Größe der Halde, die Anzahl momentan gespeicherten Elemeneten
+  public int size(){
+    Node next = this.head.sibling;
+    int degree;
+    if(head != null) {
+      degree = head.degree;
+      while (this.head != next) {
+        degree += next.degree;
+        next = next.sibling;
+      }
+      return (int) Math.pow(2,degree) - 1;
+    }
+    return 0;
+  }
+
+  public boolean isEmpty(){
+    if(this.size() == 0){
+      return true;
+    }
+    return false;
   }
 }
