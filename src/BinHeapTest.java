@@ -63,7 +63,7 @@ class BinHeapTest {
           System.out.println("--> " + e.prio() + " " + e.data());
           break;
         case "=": // changePrio entry prio
-          heap.changePrio(entrys[Integer.parseInt(cmd[1])], cmd[2]);
+          heap.chanigePrio(entrys[Integer.parseInt(cmd[1])], cmd[2]);
           break;
       }
     }
