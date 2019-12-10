@@ -5,18 +5,19 @@ import java.util.ArrayList;
 // Comparable<P> oder Comparable<P'> für einen Obertyp P' von P
 // implementieren muss) und zusätzlichen Daten eines beliebigen Typs D.
 
-class BinHeap <P extends Comparable<? super P>, D> {
-  private Node<P, D> head; // Refrenz auf erstes Element der Halde
 
+class BinHeap<P extends Comparable<? super P>, D> {
+  private Node<P, D> head; // Refrenz auf erstes Element der Halde
+  
   //Konstruktor BinHeap
-  public  BinHeap(){
+  public BinHeap() {
     this(null);
   }
   
-  public BinHeap(Node head){
+  public BinHeap(Node head) {
     this.head = head;
   }
-
+  
   // Eintrag einer solchen Warteschlange bzw. Halde, bestehend aus
   // einer Priorität prio mit Typ P und zusätzlichen Daten data mit
   // Typ D.
@@ -81,11 +82,29 @@ class BinHeap <P extends Comparable<? super P>, D> {
     private P prio() {
       return entry.prio;
     }
+    
+    private String dump() {
+      String out = this.toString();
+      
+      if (child != null) out += child.dump();
+      else if (sibling != parent.child) out += sibling.dump();
+      
+      return out;
+    }
+    
+    @Override
+    public String toString() {
+      String out = "";
+      for (int i = 0; i < degree; i++) out += "\t";
+      out += prio() + " " + entry.data();
+      
+      return out;
+    }
   }
   
   private BinHeap mergeBinHeap(BinHeap h1, BinHeap h2) {
-    if(h1 == null || h2 == null) return null;
-
+    if (h1 == null || h2 == null) return null;
+    
     BinHeap h = new BinHeap();
     ArrayList<BinHeap> buffer = new ArrayList<>();
     buffer.ensureCapacity(3);
@@ -115,7 +134,7 @@ class BinHeap <P extends Comparable<? super P>, D> {
         BinHeap b1 = buffer.get(0);
         BinHeap b2 = buffer.get(1);
         
-        if (((P)b1.head.entry.prio).compareTo((P)b2.head.entry.prio()) <= 0) {
+        if (((P) b1.head.entry.prio).compareTo((P) b2.head.entry.prio()) <= 0) {
           BinHeap temp = b1;
           b1 = b2;
           b2 = temp;
@@ -142,34 +161,34 @@ class BinHeap <P extends Comparable<? super P>, D> {
   }
   
   //liefert die Größe der Halde, die Anzahl momentan gespeicherten Elemeneten
-  public int size(){
-    if(this.head != null) {
+  public int size() {
+    if (this.head != null) {
       Node next = this.head.sibling;
       int degree = head.degree;
       while (this.head != next) {
         degree += next.degree;
         next = next.sibling;
       }
-      return (int) Math.pow(2,degree) - 1;
+      return (int) Math.pow(2, degree) - 1;
     }
     return 0;
   }
-
-  public boolean isEmpty(){
-    if(this.size() == 0){
+  
+  public boolean isEmpty() {
+    if (this.size() == 0) {
       return true;
     }
     return false;
   }
-
-  public Entry<P, D> minimum(){
+  
+  public Entry<P, D> minimum() {
     Entry next = this.head.sibling.entry;
     Entry temp = null;
     P minprio = this.head.entry.prio();
-    if(this.head != null){
-      while(this.head.entry != next) {
-        if(minprio.compareTo((P)next.prio()) <=0){
-          minprio = (P)next.prio();
+    if (this.head != null) {
+      while (this.head.entry != next) {
+        if (minprio.compareTo((P) next.prio()) <= 0) {
+          minprio = (P) next.prio();
           temp = next;
         }
       }
@@ -177,33 +196,33 @@ class BinHeap <P extends Comparable<? super P>, D> {
     }
     return null;
   }
-
-  public boolean remove(Entry<P, D> e){
+  
+  public boolean remove(Entry<P, D> e) {
     //TODO
     return false;
   }
-
-  public boolean contains(Entry<P, D> e){
-    if(e == null || e.node == null) return  false;
-
+  
+  public boolean contains(Entry<P, D> e) {
+    if (e == null || e.node == null) return false;
+    
     Node temp = e.node;
-    while(temp.parent != null) temp = temp.parent;
-
+    while (temp.parent != null) temp = temp.parent;
+    
     Node current = temp;
-    while(this.head != temp){
-      if(temp == current) return false;
+    while (this.head != temp) {
+      if (temp == current) return false;
       temp = temp.sibling;
     }
     return true;
   }
-
-  public Entry<P, D> insert(P p, D d){
-    if(p == null) return null;
-
+  
+  public Entry<P, D> insert(P p, D d) {
+    if (p == null) return null;
+    
     Entry e = new Entry(p, d);
     BinHeap tempheap = new BinHeap(new Node(e));
     this.head = mergeBinHeap(this, tempheap).head;
-
+    
     return e;
   }
 
@@ -212,8 +231,8 @@ class BinHeap <P extends Comparable<? super P>, D> {
     if(remove(minimum())) return e;
     else return null;
   }
-
-  public void dump(){
-    //TODO
+  
+  public void dump() {
+    System.out.println(head.dump());
   }
 }
