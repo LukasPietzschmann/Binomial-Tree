@@ -83,11 +83,11 @@ class BinHeap<P extends Comparable<? super P>, D> {
       return entry.prio;
     }
     
-    private String dump() {
+    private String dump(Node first) {
       String out = this.toString();
       
-      if (child != null) out += child.dump();
-      else if (sibling != parent.child) out += sibling.dump();
+      if (child != null) out += child.dump(child);
+      else if (sibling != first) out += sibling.dump(first);
       
       return out;
     }
@@ -225,7 +225,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
     
     return e;
   }
-
+  
   public Entry<P, D> extractMin(){
     Entry e = minimum();
     if(remove(minimum())) return e;
@@ -233,6 +233,6 @@ class BinHeap<P extends Comparable<? super P>, D> {
   }
   
   public void dump() {
-    System.out.println(head.dump());
+    System.out.println(head.dump(head));
   }
 }

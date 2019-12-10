@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="aabdb002-b4d4-412d-be70-497f57becd91" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="5d0e1385-5c9e-497a-8e69-cc17bb265af3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/src/BinHeap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BinHeap.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
