@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5d0e1385-5c9e-497a-8e69-cc17bb265af3" name="Default Changelist" comment="">
+    <list default="true" id="aabdb002-b4d4-412d-be70-497f57becd91" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BinHeap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BinHeap.java" afterDir="false" />
     </list>
+    <ignored path="$PROJECT_DIR$/out/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,19 +23,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/BinHeap.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="186" column="50" selection-start-line="186" selection-start-column="50" selection-end-line="186" selection-end-column="50" />
+            <state relative-caret-position="611">
+              <caret line="210" column="24" selection-start-line="210" selection-start-column="24" selection-end-line="210" selection-end-column="24" />
               <folding>
                 <element signature="e#462#463#0" expanded="true" />
                 <element signature="e#482#483#0" expanded="true" />
                 <element signature="e#514#515#0" expanded="true" />
                 <element signature="e#540#541#0" expanded="true" />
-                <element signature="e#1249#1250#0" expanded="true" />
-                <element signature="e#1274#1275#0" expanded="true" />
-                <element signature="e#1301#1302#0" expanded="true" />
-                <element signature="e#1326#1327#0" expanded="true" />
-                <element signature="e#2397#2398#0" expanded="true" />
-                <element signature="e#2428#2429#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -98,6 +95,11 @@
             <path>
               <item name="Binomial-Tree" type="b2602c69:ProjectViewProjectNode" />
               <item name="Binomial-Tree" type="462c0819:PsiDirectoryNode" />
+              <item name=".idea" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Binomial-Tree" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Binomial-Tree" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -151,18 +153,28 @@
   <component name="SpellCheckerSettings" BundledDictionaries="0" Folders="2" Folder0="C:\Users\lukas\Documents\german" Folder1="C:\Users\lukas\Documents\german" CustomDictionaries="2" CustomDictionary0="C:\Users\lukas\Documents\german\german.dic" CustomDictionary1="C:\Users\lukas\Documents\german\variants.dic" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="5d0e1385-5c9e-497a-8e69-cc17bb265af3" name="Default Changelist" comment="" />
+      <changelist id="aabdb002-b4d4-412d-be70-497f57becd91" name="Default Changelist" comment="" />
       <created>1575039864378</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1575039864378</updated>
       <workItem from="1575039870197" duration="438000" />
       <workItem from="1575628153185" duration="3341000" />
+      <workItem from="1575984175272" duration="284000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3286000" />
+    <option name="totallyTimeSpent" value="4294000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -172,7 +184,7 @@
       <window_info id="UI Designer" order="1" />
       <window_info id="Learn" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="4" weight="0.5127932" />
+      <window_info content_ui="combo" id="Project" order="4" weight="0.07462686" />
       <window_info id="Structure" order="5" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="0" weight="0.4409534" />
       <window_info anchor="bottom" id="Event Log" order="1" side_tool="true" />
@@ -197,7 +209,7 @@
       <window_info id="UI Designer" order="1" />
       <window_info id="Learn" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="4" weight="0.5127932" />
+      <window_info content_ui="combo" id="Project" order="4" weight="0.07462686" />
       <window_info id="Structure" order="5" side_tool="true" weight="0.25" />
       <window_info active="true" anchor="bottom" id="Terminal" order="0" visible="true" weight="0.4409534" />
       <window_info anchor="bottom" id="Event Log" order="1" side_tool="true" />
@@ -226,5 +238,30 @@
     <state x="657" y="324" key="MultipleFileMergeDialog/63.0.1760.1215@63.0.1760.1215" />
     <state x="421" y="235" key="SettingsEditor" />
     <state x="421" y="235" key="SettingsEditor/0.0.1823.1185@0.0.1823.1185" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/BinHeap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="611">
+          <caret line="210" column="24" selection-start-line="210" selection-start-column="24" selection-end-line="210" selection-end-column="24" />
+          <folding>
+            <element signature="e#462#463#0" expanded="true" />
+            <element signature="e#482#483#0" expanded="true" />
+            <element signature="e#514#515#0" expanded="true" />
+            <element signature="e#540#541#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/BinHeapTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>

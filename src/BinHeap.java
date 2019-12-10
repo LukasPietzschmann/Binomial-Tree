@@ -208,8 +208,9 @@ class BinHeap <P extends Comparable<? super P>, D> {
   }
 
   public Entry<P, D> extractMin(){
-    //TODO
-    return null;
+    Entry e = minimum();
+    if(remove(minimum())) return e;
+    else return null;
   }
 
   public void dump(){
