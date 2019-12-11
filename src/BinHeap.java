@@ -196,9 +196,22 @@ class BinHeap<P extends Comparable<? super P>, D> {
     }
     return null;
   }
+
+  public boolean changePrio (Entry<P, D> e, P p){
+    //TODO
+    return false;
+  }
   
   public boolean remove(Entry<P, D> e) {
-    //TODO
+    if(e != null){
+      if(contains(e)){
+        //Prio auf -unendlich setzen und dann das Element mit
+        // der kleinsten Priorität rausnehmen
+        //changePrio(e,);
+        extractMin();
+        return true;
+      }
+    }
     return false;
   }
   
@@ -227,9 +240,25 @@ class BinHeap<P extends Comparable<? super P>, D> {
   }
   
   public Entry<P, D> extractMin(){
+    //Suche in der Liste der Wurzelknoten ein Objekt mit minimaler Prior ität und entfer ne diesen Knoten aus der Liste.
     Entry e = minimum();
-    if(remove(minimum())) return e;
-    else return null;
+    Entry temp = e.node.sibling.entry;
+    while(e.node != temp.node.sibling){
+      temp = temp.node.sibling.entry;
+    }
+    //Zeiger von vorherigen von e zum sibling von e
+    //Das soll gleich dem entfernen aus der Liste sein jetzt sollt kein Zeiger mehr auf e zeigen.
+    temp.node.sibling = e.node.sibling;
+
+    //2 Wenn dieser Knoten Nachfolger besitzt: Vereinige die Liste seiner Nachfolger
+    // (beginnend mit dem Nachfolger mit dem kleinsten Grad, der über child → sibling direkt zugreifbar ist)
+    // mit der verbleibenden Halde.
+    if(e.node.child != null){
+      //merge den jetigen Baum mit dem child heap
+      BinHeap tempBin = new BinHeap<>(e.node.child.sibling);
+      mergeBinHeap(this,tempBin);
+    }
+    return e;
   }
   
   public void dump() {
