@@ -199,7 +199,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
 
   public boolean changePrio (Entry<P, D> e, P p){
     if(e == null || p == null) return false;
-    if(e.prio.compareTo(p)<=0){
+    if(p.compareTo(e.prio)<=0){
       e.prio = p;
 
       if(e.node.parent == null) return true;
@@ -222,7 +222,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
       if(contains(e)){
         //Prio auf -unendlich setzen und dann das Element mit
         // der kleinsten Priorität rausnehmen
-        //changePrio(e,);
+        changePrio(e,(P)new NegInfinityPrio());
         extractMin();
         return true;
       }
@@ -278,5 +278,12 @@ class BinHeap<P extends Comparable<? super P>, D> {
   
   public void dump() {
     System.out.println(head.dump(head));
+  }
+
+  private static class NegInfinityPrio implements Comparable{
+    @Override
+    public int compareTo(Object o) {
+      return -1;
+    }
   }
 }
