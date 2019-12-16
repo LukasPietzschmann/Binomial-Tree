@@ -32,13 +32,22 @@ class BinHeap<P extends Comparable<? super P>, D> {
     while (!h1.isEmpty() || !h2.isEmpty() || !buffer.isEmpty()) {
       if (h1.head.degree == k) {
         buffer.push(new BinHeap(h1.head));
-        h1.remove(h1.head.entry);
+        Node it = head.sibling;
+        while (it.sibling != head) it = it.sibling;
+        
+        it.sibling = head.sibling;
+        head = head.sibling;
       }
       if (h2.head.degree == k) {
         buffer.push(new BinHeap(h2.head));
-        h2.remove(h1.head.entry);
+        Node it = head.sibling;
+        while (it.sibling != head) it = it.sibling;
+  
+        it.sibling = head.sibling;
+        head = head.sibling;
       }
-      
+  
+      //region Diggih hier is Fehler drinne
       if (buffer.size() == 1 || buffer.size() == 3) {
         BinHeap b = buffer.pop();
         
@@ -54,7 +63,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
         BinHeap b1 = buffer.pop();
         BinHeap b2 = buffer.pop();
         
-        if (((P) b1.head.entry.prio).compareTo((P) b2.head.entry.prio()) <= 0) {
+        if (b1.head.entry.prio.compareTo(b2.head.entry.prio()) <= 0) {
           BinHeap temp = b1;
           b1 = b2;
           b2 = temp;
@@ -70,6 +79,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
         
         buffer.push(b2);
       }
+      //endregion
       
       k++;
     }
@@ -83,7 +93,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
     int s = (int) Math.pow(2, this.head.degree);
     
     Node<P, D> n = this.head;
-    while (n.sibling != this.head){
+    while (n.sibling != this.head) {
       n = n.sibling;
       s += Math.pow(2, n.degree);
     }
@@ -99,19 +109,21 @@ class BinHeap<P extends Comparable<? super P>, D> {
   }
   
   public Entry<P, D> minimum() {
+    if (this.head == null) return null;
+    
     Entry next = this.head.sibling.entry;
-    Entry temp = null;
+    Entry minPrioEntry = this.head.entry;
     P minprio = this.head.entry.prio();
-    if (this.head != null) {
-      while (this.head.entry != next) {
-        if (minprio.compareTo((P) next.prio()) <= 0) {
-          minprio = (P) next.prio();
-          temp = next;
-        }
+    
+    while (next != this.head.entry) {
+      if (minprio.compareTo((P) next.prio()) <= 0) {
+        minprio = (P) next.prio();
+        minPrioEntry = next;
+        next = next.node.sibling.entry;
       }
-      return temp;
     }
-    return null;
+    
+    return minPrioEntry;
   }
   
   public boolean changePrio(Entry<P, D> e, P p) {
@@ -174,9 +186,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
     //Suche in der Liste der Wurzelknoten ein Objekt mit minimaler Prior ität und entfer ne diesen Knoten aus der Liste.
     Entry e = minimum();
     Entry temp = e.node.sibling.entry;
-    while (e.node != temp.node.sibling) {
-      temp = temp.node.sibling.entry;
-    }
+    while (e.node != temp.node.sibling) temp = temp.node.sibling.entry;
     //Zeiger von vorherigen von e zum sibling von e
     //Das soll gleich dem entfernen aus der Liste sein jetzt sollt kein Zeiger mehr auf e zeigen.
     temp.node.sibling = e.node.sibling;
@@ -203,7 +213,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
   // Wenn der Eintrag momentan tatsächlich zu einer Halde gehört,
   // verweist node auf den zugehörigen Knoten eines Binomialbaums
   // dieser Halde.
-  public static class Entry<P, D> {
+  public static class Entry<P extends Comparable<? super P>, D> {
     // Priorität, zusätzliche Daten und zugehöriger Knoten.
     private P prio;
     private D data;
@@ -230,7 +240,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
   // Neben den eigentlichen Knotendaten (degree, parent, child,
   // sibling), enthält der Knoten einen Verweis auf den zugehörigen
   // Eintrag.
-  private static class Node<P, D> {
+  private static class Node<P extends Comparable<? super P>, D> {
     // Zugehöriger Eintrag.
     private Entry<P, D> entry;
     
