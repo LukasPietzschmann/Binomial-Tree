@@ -32,22 +32,27 @@ class BinHeap<P extends Comparable<? super P>, D> {
     while (!h1.isEmpty() || !h2.isEmpty() || !buffer.isEmpty()) {
       if (h1.head.degree == k) {
         buffer.push(new BinHeap(h1.head));
-        Node it = head.sibling;
-        while (it.sibling != head) it = it.sibling;
         
-        it.sibling = head.sibling;
-        head = head.sibling;
+        if (h1.head == h1.head.sibling) h1.head = null;
+        else {
+          Node it = head.sibling;
+          while (it.sibling != head) it = it.sibling;
+          it.sibling = head.sibling;
+          head = head.sibling;
+        }
       }
       if (h2.head.degree == k) {
         buffer.push(new BinHeap(h2.head));
-        Node it = head.sibling;
-        while (it.sibling != head) it = it.sibling;
-  
-        it.sibling = head.sibling;
-        head = head.sibling;
+        
+        if (h2.head == h2.head.sibling) h2.head = null;
+        else {
+          Node it = head.sibling;
+          while (it.sibling != head) it = it.sibling;
+          it.sibling = head.sibling;
+          head = head.sibling;
+        }
       }
-  
-      //region Diggih hier is Fehler drinne
+      
       if (buffer.size() == 1 || buffer.size() == 3) {
         BinHeap b = buffer.pop();
         
@@ -69,17 +74,19 @@ class BinHeap<P extends Comparable<? super P>, D> {
           b2 = temp;
         }
         
-        b2.head.sibling = null;
+        //FIXME b2.sibling ist nicht gesetzt (s. Bild im Block)
+        //b2.head.sibling = null;
         b2.head.degree += 1;
         b1.head.parent = b2.head;
         
         if (b2.head.child == null) b2.head.child = b1.head.sibling = b1.head;
-        else b1.head.sibling = b2.head.child.sibling;
-        b2.head.child = b2.head.child.sibling = b1.head;
+        else {
+          b1.head.sibling = b2.head.child.sibling;
+          b2.head.child = b2.head.child.sibling = b1.head;
+        }
         
         buffer.push(b2);
       }
-      //endregion
       
       k++;
     }
