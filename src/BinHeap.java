@@ -5,6 +5,7 @@ import java.util.Stack;
 // mit Prioritäten eines beliebigen Typs P (der die Schnittstelle
 // Comparable<P> oder Comparable<P'> für einen Obertyp P' von P
 // implementieren muss) und zusätzlichen Daten eines beliebigen Typs D.
+//FIXME beim 6. einfügen Schleife
 class BinHeap<P extends Comparable<? super P>, D> {
   // Refrenz auf erstes Element der Halde
   private Node<P, D> head;
@@ -24,65 +25,61 @@ class BinHeap<P extends Comparable<? super P>, D> {
     if (h2.head == null) return h1;
     
     BinHeap h = new BinHeap();
-    Stack<BinHeap<P, D>> buffer = new Stack<>();
+    Stack<Node<P, D>> buffer = new Stack<>();
     buffer.ensureCapacity(3);
     
     int k = 0;
     
     while (!h1.isEmpty() || !h2.isEmpty() || !buffer.isEmpty()) {
-      if (h1.head.degree == k) {
-        buffer.push(new BinHeap(h1.head));
+      if (!h1.isEmpty() && h1.head.degree == k) {
+        buffer.push(h1.head);
         
-        if (h1.head == h1.head.sibling) h1.head = null;
+        if (h1.head.sibling == null) h1.head = null;
         else {
-          Node it = head.sibling;
-          while (it.sibling != head) it = it.sibling;
-          it.sibling = head.sibling;
-          head = head.sibling;
+          h1.head = h1.head.sibling;
+          h1.head.sibling = null;
         }
       }
-      if (h2.head.degree == k) {
-        buffer.push(new BinHeap(h2.head));
+      if (!h2.isEmpty() && h2.head.degree == k) {
+        buffer.push(h2.head);
         
-        if (h2.head == h2.head.sibling) h2.head = null;
+        if (h2.head.sibling == null) h2.head = null;
         else {
-          Node it = head.sibling;
-          while (it.sibling != head) it = it.sibling;
-          it.sibling = head.sibling;
-          head = head.sibling;
+          h2.head = h2.head.sibling;
+          h2.head.sibling = null;
         }
       }
       
       if (buffer.size() == 1 || buffer.size() == 3) {
-        BinHeap b = buffer.pop();
+        Node<P, D> b = buffer.pop();
         
-        if (h.head == null) h.head = b.head;
+        if (h.head == null) h.head = b;
         else {
-          Node n = h.head;
-          while (n.sibling != h.head) n = n.sibling;
-          b.head.sibling = h.head;
-          n.sibling = b.head;
+          Node lastElemInH = h.head;
+          while (lastElemInH.sibling != null) lastElemInH = lastElemInH.sibling;
+          
+          lastElemInH.sibling = b;
+          b.sibling = null;
         }
       }
       if (buffer.size() == 2) {
-        BinHeap b1 = buffer.pop();
-        BinHeap b2 = buffer.pop();
+        Node<P, D> b1 = buffer.pop();
+        Node<P, D> b2 = buffer.pop();
         
-        if (b1.head.entry.prio.compareTo(b2.head.entry.prio()) <= 0) {
-          BinHeap temp = b1;
+        if (b1.entry.prio.compareTo(b2.entry.prio()) <= 0) {
+          Node<P, D> temp = b1;
           b1 = b2;
           b2 = temp;
         }
         
-        //FIXME b2.sibling ist nicht gesetzt (s. Bild im Block)
-        //b2.head.sibling = null;
-        b2.head.degree += 1;
-        b1.head.parent = b2.head;
+        b2.sibling = null;
+        b2.degree += 1;
+        b1.parent = b2;
         
-        if (b2.head.child == null) b2.head.child = b1.head.sibling = b1.head;
+        if (b2.child == null) b2.child = b1.sibling = b1;
         else {
-          b1.head.sibling = b2.head.child.sibling;
-          b2.head.child = b2.head.child.sibling = b1.head;
+          b1.sibling = b2.child.sibling;
+          b2.child = b2.child.sibling = b1;
         }
         
         buffer.push(b2);
@@ -94,13 +91,12 @@ class BinHeap<P extends Comparable<? super P>, D> {
     return h;
   }
   
-  //liefert die Größe der Halde, die Anzahl momentan gespeicherten Elemeneten
   public int size() {
     if (this.head == null) return 0;
     int s = (int) Math.pow(2, this.head.degree);
     
     Node<P, D> n = this.head;
-    while (n.sibling != this.head) {
+    while (n.sibling != null) {
       n = n.sibling;
       s += Math.pow(2, n.degree);
     }
@@ -109,24 +105,18 @@ class BinHeap<P extends Comparable<? super P>, D> {
   }
   
   public boolean isEmpty() {
-    if (this.size() == 0) {
-      return true;
-    }
-    return false;
+    return size() == 0;
   }
   
   public Entry<P, D> minimum() {
     if (this.head == null) return null;
     
-    Entry next = this.head.sibling.entry;
-    Entry minPrioEntry = this.head.entry;
-    P minprio = this.head.entry.prio();
+    Node next = this.head;
+    Entry<P, D> minPrioEntry = next.entry;
     
-    while (next != this.head.entry) {
-      if (minprio.compareTo((P) next.prio()) <= 0) {
-        minprio = (P) next.prio();
-        minPrioEntry = next;
-        next = next.node.sibling.entry;
+    while ((next = next.sibling) != null) {
+      if (next.prio().compareTo(minPrioEntry.prio) > 0) {
+        minPrioEntry = next.entry;
       }
     }
     
@@ -198,7 +188,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
     //Das soll gleich dem entfernen aus der Liste sein jetzt sollt kein Zeiger mehr auf e zeigen.
     temp.node.sibling = e.node.sibling;
     
-    //2 Wenn dieser Knoten Nachfolger besitzt: Vereinige die Liste seiner Nachfolger
+    // Wenn dieser Knoten Nachfolger besitzt: Vereinige die Liste seiner Nachfolger
     // (beginnend mit dem Nachfolger mit dem kleinsten Grad, der über child → sibling direkt zugreifbar ist)
     // mit der verbleibenden Halde.
     if (e.node.child != null) {
@@ -214,6 +204,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
     System.out.println(head.dump(head));
   }
   
+  //<editor-fold desc="Hilfs Klassen">
   // Eintrag einer solchen Warteschlange bzw. Halde, bestehend aus
   // einer Priorität prio mit Typ P und zusätzlichen Daten data mit
   // Typ D.
@@ -271,8 +262,6 @@ class BinHeap<P extends Comparable<? super P>, D> {
     private Node(Entry<P, D> e) {
       entry = e;
       e.node = (Node<P, D>) this;
-      //FIXME noch net sicher ob das hier richtig ist
-      sibling = (Node<P, D>) this;
     }
     
     // Priorität des Knotens, d. h. des zugehörigen Eintrags
@@ -285,7 +274,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
       String out = this.toString();
       
       if (child != null) out += child.dump(child);
-      else if (sibling != first) out += sibling.dump(first);
+      else if (sibling != first && sibling != null) out += sibling.dump(first);
       
       return out;
     }
@@ -307,4 +296,5 @@ class BinHeap<P extends Comparable<? super P>, D> {
       return -1;
     }
   }
+  //</editor-fold>
 }
