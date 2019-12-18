@@ -35,19 +35,13 @@ class BinHeap<P extends Comparable<? super P>, D> {
         buffer.push(h1.head);
         
         if (h1.head.sibling == null) h1.head = null;
-        else {
-          h1.head = h1.head.sibling;
-          h1.head.sibling = null;
-        }
+        else h1.head = h1.head.sibling;
       }
       if (!h2.isEmpty() && h2.head.degree == k) {
         buffer.push(h2.head);
         
         if (h2.head.sibling == null) h2.head = null;
-        else {
-          h2.head = h2.head.sibling;
-          h2.head.sibling = null;
-        }
+        else h2.head = h2.head.sibling;
       }
       
       if (buffer.size() == 1 || buffer.size() == 3) {
@@ -66,7 +60,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
         Node<P, D> b1 = buffer.pop();
         Node<P, D> b2 = buffer.pop();
         
-        if (b1.entry.prio.compareTo(b2.entry.prio()) <= 0) {
+        if (b1.entry.prio.compareTo(b2.entry.prio()) > 0) {
           Node<P, D> temp = b1;
           b1 = b2;
           b2 = temp;
@@ -201,7 +195,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
   
   public void dump() {
     if (head == null) return;
-    System.out.println(head.dump(head));
+    System.out.println(head.dump(head, 0));
   }
   
   //<editor-fold desc="Hilfs Klassen">
@@ -270,22 +264,26 @@ class BinHeap<P extends Comparable<? super P>, D> {
       return entry.prio;
     }
     
-    private String dump(Node first) {
-      String out = this.toString();
+    private String dump(Node first, int height) {
+      String out = this.dumpEntry(height);
       
-      if (child != null) out += child.dump(child);
-      else if (sibling != first && sibling != null) out += sibling.dump(first);
+      if (child != null) out += child.dump(child, height + 1);
+      if (sibling != first && sibling != null) out += sibling.dump(first, height);
+      
+      return out;
+    }
+    
+    private String dumpEntry(int height) {
+      String out = "";
+      for (int i = 0; i < height; i++) out += "  ";
+      out += prio() + " " + entry.data() + "\n";
       
       return out;
     }
     
     @Override
     public String toString() {
-      String out = "";
-      for (int i = 0; i < degree; i++) out += "\t";
-      out += prio() + " " + entry.data();
-      
-      return out;
+      return String.format("%s  %s", entry.data, entry.prio);
     }
   }
   

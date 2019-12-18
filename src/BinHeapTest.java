@@ -5,7 +5,7 @@ class BinHeapTest {
     // Daten des Typs Integer erzeugen.
     // (Die Implementierung muss aber natürlich auch mit anderen
     // Typen funktionieren.)
-    BinHeap<String, Integer> heap = new BinHeap<String, Integer>();
+    BinHeap<Integer, String> heap = new BinHeap<>();
     
     // Feld mit allen eingefügten Einträgen, damit sie später
     // für remove und changePrio verwendet werden können.
@@ -16,7 +16,7 @@ class BinHeapTest {
     // über "unchecked or unsafe operations"; die eigentlich "korrekte"
     // Formulierung "new BinHeap.Entry<String, Integer> [100]"
     // führt jedoch zu einem Übersetzungsfehler!
-    BinHeap.Entry<String, Integer>[] entrys = new BinHeap.Entry[100];
+    BinHeap.Entry<Integer, String>[] entrys = new BinHeap.Entry[100];
     
     // Anzahl der bis jetzt eingefügten Einträge.
     int n = 0;
@@ -47,14 +47,14 @@ class BinHeapTest {
         case "+":
           // insert prio
           // Die laufende Nummer n wird als zusätzliche Daten verwendet.
-          entrys[n] = heap.insert(cmd[1], n);
+          entrys[n] = heap.insert(Integer.parseInt(cmd[1]), ""+n);
           n++;
           break;
         case "-": // remove entry
           heap.remove(entrys[Integer.parseInt(cmd[1])]);
           break;
         case "?": // minimum
-          BinHeap.Entry<String, Integer> e = heap.minimum();
+          BinHeap.Entry<Integer, String> e = heap.minimum();
           System.out.println("--> " + e.prio() + " " + e.data());
           break;
         case "!": // extractMin
@@ -62,7 +62,7 @@ class BinHeapTest {
           System.out.println("--> " + e.prio() + " " + e.data());
           break;
         case "=": // changePrio entry prio
-          heap.changePrio(entrys[Integer.parseInt(cmd[1])], cmd[2]);
+          heap.changePrio(entrys[Integer.parseInt(cmd[1])], Integer.parseInt(cmd[2]));
           break;
       }
     }
