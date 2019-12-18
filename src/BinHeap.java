@@ -52,15 +52,15 @@ class BinHeap<P extends Comparable<? super P>, D> {
           Node lastElemInH = h.head;
           while (lastElemInH.sibling != null) lastElemInH = lastElemInH.sibling;
           
-          lastElemInH.sibling = b;
           b.sibling = null;
+          lastElemInH.sibling = b;
         }
       }
       if (buffer.size() == 2) {
         Node<P, D> b1 = buffer.pop();
         Node<P, D> b2 = buffer.pop();
         
-        if (b1.entry.prio.compareTo(b2.entry.prio()) > 0) {
+        if (b1.entry.prio instanceof NegInfinityPrio || b1.entry.prio.compareTo(b2.entry.prio) <= 0) {
           Node<P, D> temp = b1;
           b1 = b2;
           b2 = temp;
@@ -108,16 +108,38 @@ class BinHeap<P extends Comparable<? super P>, D> {
     Node next = this.head;
     Entry<P, D> minPrioEntry = next.entry;
     
-    while ((next = next.sibling) != null) {
-      if (next.prio().compareTo(minPrioEntry.prio) > 0) {
-        minPrioEntry = next.entry;
-      }
-    }
+    do {
+      if (next.prio() instanceof NegInfinityPrio) return next.entry;
+      if (((P) next.prio()).compareTo(minPrioEntry.prio) < 0) minPrioEntry = next.entry;
+      next = next.sibling;
+    }while (next != null);
     
     return minPrioEntry;
   }
   
   public boolean changePrio(Entry<P, D> e, P p) {
+    if (e == null || p == null || !this.contains(e)) return false;
+    if (p instanceof NegInfinityPrio || p.compareTo(e.prio) <= 0) {
+      e.prio = p;
+      
+      while (e.node.parent != null && (e.prio instanceof NegInfinityPrio || e.prio.compareTo(e.node.parent.entry.prio) < 0)) {
+        Entry<P, D> temp = e;
+        e.node.entry = e.node.parent.entry;
+        e.node.entry.node = e.node;
+        e.node.parent.entry = e;
+        e.node = e.node.parent;
+      }
+    }else {
+      remove(e);
+      e.prio = p;
+      BinHeap<P, D> binHeap = new BinHeap<>(new Node(e));
+      head = mergeBinHeap(this, binHeap).head;
+    }
+    
+    return true;
+  }
+  
+  /*public boolean changePrio(Entry<P, D> e, P p) {
     if (e == null || p == null) return false;
     if (p.compareTo(e.prio) <= 0) {
       e.prio = p;
@@ -135,30 +157,26 @@ class BinHeap<P extends Comparable<? super P>, D> {
       mergeBinHeap(this, binHeap);
     }
     return true;
-  }
+  }*/
   
   public boolean remove(Entry<P, D> e) {
-    if (e == null) return false;
-    if (contains(e)) {
-      //Prio auf -unendlich setzen und dann das Element mit
-      // der kleinsten Priorität rausnehmen
-      changePrio(e, (P) new NegInfinityPrio());
-      extractMin();
-      return true;
-    }
-    return false;
+    if (e == null || !contains(e)) return false;
+    changePrio(e, (P) new NegInfinityPrio());
+    extractMin();
+    
+    return true;
   }
   
   public boolean contains(Entry<P, D> e) {
     if (e == null || e.node == null) return false;
     
-    Node temp = e.node;
-    while (temp.parent != null) temp = temp.parent;
+    Node moveUpNode = e.node;
+    while (moveUpNode.parent != null) moveUpNode = moveUpNode.parent;
     
-    Node current = temp;
-    while (this.head != temp) {
-      if (temp == current) return false;
-      temp = temp.sibling;
+    Node current = head;
+    while (current != null) {
+      if (current == moveUpNode) return true;
+      current = current.sibling;
     }
     return true;
   }
@@ -174,23 +192,54 @@ class BinHeap<P extends Comparable<? super P>, D> {
   }
   
   public Entry<P, D> extractMin() {
-    //Suche in der Liste der Wurzelknoten ein Objekt mit minimaler Prior ität und entfer ne diesen Knoten aus der Liste.
-    Entry e = minimum();
-    Entry temp = e.node.sibling.entry;
-    while (e.node != temp.node.sibling) temp = temp.node.sibling.entry;
-    //Zeiger von vorherigen von e zum sibling von e
-    //Das soll gleich dem entfernen aus der Liste sein jetzt sollt kein Zeiger mehr auf e zeigen.
-    temp.node.sibling = e.node.sibling;
+    if (head == null) return null;
+    
+    Entry minimum = minimum();
+    Node n = head;
+    if (minimum.node == head) head = minimum.node.sibling;
+    else {
+      while (n.sibling != minimum.node) n = n.sibling;
+      n.sibling = minimum.node.sibling;
+    }
     
     // Wenn dieser Knoten Nachfolger besitzt: Vereinige die Liste seiner Nachfolger
-    // (beginnend mit dem Nachfolger mit dem kleinsten Grad, der über child → sibling direkt zugreifbar ist)
-    // mit der verbleibenden Halde.
-    if (e.node.child != null) {
-      //merge den jetigen Baum mit dem child heap
-      BinHeap tempBin = new BinHeap<>(e.node.child.sibling);
-      mergeBinHeap(this, tempBin);
+    // (beginnend mit dem Nachfolger mit dem kleinsten Grad, der über child → sibling direkt zugreifbar ist) mit der verbleibenden Halde.
+    if (minimum.node.child != null) {
+      Node minDegreeNode = minimum.node.child.sibling;
+      minimum.node.child.sibling = null;
+      
+      Node it = minDegreeNode;
+      while (it != null){
+        it.parent = null;
+        it = it.sibling;
+      }
+      
+      BinHeap h2 = new BinHeap(minDegreeNode);
+      this.head = mergeBinHeap(this, h2).head;!
+      
+      
+      
+      
+      
+      
+      
+      
+      /*Node it = minimum.node.child;
+      //Parent Zeiger entfernen
+      do {
+        it.parent = null;
+        it = it.sibling;
+      }while (it != null && it != minimum.node.child);
+      BinHeap tempBin = new BinHeap<>(minimum.node.child);
+      this.head = mergeBinHeap(this, tempBin).head;
+      
+      //letzten Sibling zeiger auf null setzen
+      it = head;
+      while (it.sibling != null && it.sibling != head) it = it.sibling;
+      it.sibling = null;*/
     }
-    return e;
+    
+    return minimum;
   }
   
   public void dump() {
@@ -205,7 +254,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
   // Wenn der Eintrag momentan tatsächlich zu einer Halde gehört,
   // verweist node auf den zugehörigen Knoten eines Binomialbaums
   // dieser Halde.
-  public static class Entry<P extends Comparable<? super P>, D> {
+  public static class Entry<P, D> {
     // Priorität, zusätzliche Daten und zugehöriger Knoten.
     private P prio;
     private D data;
@@ -232,7 +281,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
   // Neben den eigentlichen Knotendaten (degree, parent, child,
   // sibling), enthält der Knoten einen Verweis auf den zugehörigen
   // Eintrag.
-  private static class Node<P extends Comparable<? super P>, D> {
+  private static class Node<P, D> {
     // Zugehöriger Eintrag.
     private Entry<P, D> entry;
     
