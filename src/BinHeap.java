@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Stack;
 
 // Als Binomial-Halde implementierte Minimum-Vorrangwarteschlange
@@ -46,19 +45,22 @@ class BinHeap<P extends Comparable<? super P>, D> {
       
       if (buffer.size() == 1 || buffer.size() == 3) {
         Node<P, D> b = buffer.pop();
+        b.sibling = null;
         
         if (h.head == null) h.head = b;
         else {
           Node lastElemInH = h.head;
           while (lastElemInH.sibling != null) lastElemInH = lastElemInH.sibling;
           
-          b.sibling = null;
           lastElemInH.sibling = b;
         }
       }
       if (buffer.size() == 2) {
         Node<P, D> b1 = buffer.pop();
         Node<P, D> b2 = buffer.pop();
+        
+        b1.sibling = null;
+        b2.sibling = null;
         
         if (b1.entry.prio instanceof NegInfinityPrio || b1.entry.prio.compareTo(b2.entry.prio) <= 0) {
           Node<P, D> temp = b1;
@@ -118,12 +120,11 @@ class BinHeap<P extends Comparable<? super P>, D> {
   }
   
   public boolean changePrio(Entry<P, D> e, P p) {
-    if (e == null || p == null || !this.contains(e)) return false;
+    if (this.head == null || e == null || p == null || !this.contains(e)) return false;
     if (p instanceof NegInfinityPrio || p.compareTo(e.prio) <= 0) {
       e.prio = p;
       
       while (e.node.parent != null && (e.prio instanceof NegInfinityPrio || e.prio.compareTo(e.node.parent.entry.prio) < 0)) {
-        Entry<P, D> temp = e;
         e.node.entry = e.node.parent.entry;
         e.node.entry.node = e.node;
         e.node.parent.entry = e;
@@ -139,28 +140,8 @@ class BinHeap<P extends Comparable<? super P>, D> {
     return true;
   }
   
-  /*public boolean changePrio(Entry<P, D> e, P p) {
-    if (e == null || p == null) return false;
-    if (p.compareTo(e.prio) <= 0) {
-      e.prio = p;
-      
-      if (e.node.parent == null) return true;
-      while (e.node.parent != null && e.prio.compareTo(e.node.parent.entry.prio) < 0) {
-        Entry temp = e.node.parent.entry;
-        e.node.parent.entry = e;
-        e.node.entry = temp;
-      }
-    }else {
-      remove(e);
-      e.prio = p;
-      BinHeap<P, D> binHeap = new BinHeap<>(new Node(e));
-      mergeBinHeap(this, binHeap);
-    }
-    return true;
-  }*/
-  
   public boolean remove(Entry<P, D> e) {
-    if (e == null || !contains(e)) return false;
+    if (this.head == null || e == null || !contains(e)) return false;
     changePrio(e, (P) new NegInfinityPrio());
     extractMin();
     
@@ -168,7 +149,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
   }
   
   public boolean contains(Entry<P, D> e) {
-    if (e == null || e.node == null) return false;
+    if (this.head == null || e == null || e.node == null) return false;
     
     Node moveUpNode = e.node;
     while (moveUpNode.parent != null) moveUpNode = moveUpNode.parent;
@@ -209,34 +190,13 @@ class BinHeap<P extends Comparable<? super P>, D> {
       minimum.node.child.sibling = null;
       
       Node it = minDegreeNode;
-      while (it != null){
+      while (it != null) {
         it.parent = null;
         it = it.sibling;
       }
       
       BinHeap h2 = new BinHeap(minDegreeNode);
-      this.head = mergeBinHeap(this, h2).head;!
-      
-      
-      
-      
-      
-      
-      
-      
-      /*Node it = minimum.node.child;
-      //Parent Zeiger entfernen
-      do {
-        it.parent = null;
-        it = it.sibling;
-      }while (it != null && it != minimum.node.child);
-      BinHeap tempBin = new BinHeap<>(minimum.node.child);
-      this.head = mergeBinHeap(this, tempBin).head;
-      
-      //letzten Sibling zeiger auf null setzen
-      it = head;
-      while (it.sibling != null && it.sibling != head) it = it.sibling;
-      it.sibling = null;*/
+      this.head = mergeBinHeap(this, h2).head;
     }
     
     return minimum;

@@ -1,3 +1,5 @@
+@SuppressWarnings("ALL")
+
 // Interaktives Testprogramm für die Klasse BinHeap.
 class BinHeapTest {
   public static void main(String[] args) throws java.io.IOException {
