@@ -276,7 +276,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
     private String dump(Node first, int height) {
       String out = this.dumpEntry(height);
       
-      if (child != null) out += child.dump(child, height + 1);
+      if (child != null) out += child.sibling.dump(child.sibling, height + 1);
       if (sibling != first && sibling != null) out += sibling.dump(first, height);
       
       return out;
@@ -292,7 +292,7 @@ class BinHeap<P extends Comparable<? super P>, D> {
     
     @Override
     public String toString() {
-      return String.format("%s  %s", entry.data, entry.prio);
+      return String.format("%s %s", entry.data, entry.prio);
     }
   }
   
